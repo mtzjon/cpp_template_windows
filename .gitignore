@@ -1,21 +1,48 @@
-# Prerequisites
-*.d
+# Build directories
+build/
+Build/
+BUILD/
+out/
+install/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+CTestTestfile.cmake
+CMakeUserPresets.json
+compile_commands.json
+
+# IDE files
+.vs/
+.vscode/
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.xcodeproj/
+*.xcworkspace/
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
 # Compiled Object files
-*.slo
-*.lo
 *.o
 *.obj
+*.elf
 
 # Precompiled Headers
 *.gch
 *.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
 
 # Compiled Dynamic libraries
 *.so
@@ -27,8 +54,6 @@
 *.smod
 
 # Compiled Static libraries
-*.lai
-*.la
 *.a
 *.lib
 
@@ -37,5 +62,91 @@
 *.out
 *.app
 
-# debug information files
-*.dwo
+# Package files
+*.tar.gz
+*.zip
+*.7z
+*.msi
+*.deb
+*.rpm
+
+# Logs
+*.log
+
+# Runtime directories
+logs/
+temp/
+tmp/
+
+# Coverage files
+*.gcov
+*.gcda
+*.gcno
+coverage/
+coverage.xml
+lcov.info
+
+# Profiler files
+*.prof
+gmon.out
+
+# Sanitizer files
+*.san
+
+# Windows specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Linux specific
+*~
+.nfs*
+
+# Documentation output
+docs/html/
+docs/latex/
+docs/xml/
+
+# Package managers
+vcpkg_installed/
+conan/
+.conan/
+
+# Testing
+TestResults/
+test_results/
+*.testresults
+
+# Backup files
+*.bak
+*.tmp
+*.temp
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Qt Creator
+*.pro.user
+*.pro.user.*
+
+# Ninja
+.ninja_deps
+.ninja_log
+
+# CPack files
+_CPack_Packages/
+*.dmg
+
+# Cache directories
+.cache/

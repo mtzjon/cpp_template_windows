@@ -1,0 +1,84 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release'
+        required: true
+        default: '1.0.0'
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Setup MSVC
+      uses: microsoft/setup-msbuild@v1.3
+
+    - name: Install Ninja
+      run: choco install ninja
+
+    - name: Configure CMake
+      run: cmake --preset msvc-release
+
+    - name: Build
+      run: cmake --build --preset msvc-release
+
+    - name: Run tests
+      run: ctest --preset release --output-on-failure
+
+    - name: Create packages
+      run: |
+        cpack --config build/msvc-release/CPackConfig.cmake -G NSIS
+        cpack --config build/msvc-release/CPackConfig.cmake -G ZIP
+
+    - name: Upload Release Assets
+      uses: softprops/action-gh-release@v1
+      if: github.event_name == 'release'
+      with:
+        files: |
+          build/msvc-release/*.exe
+          build/msvc-release/*.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Artifacts (manual dispatch)
+      if: github.event_name == 'workflow_dispatch'
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-packages
+        path: |
+          build/msvc-release/*.exe
+          build/msvc-release/*.zip
+
+  publish-docs:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Doxygen
+      run: sudo apt-get update && sudo apt-get install -y doxygen graphviz
+
+    - name: Generate documentation
+      run: |
+        cmake -S . -B build
+        cmake --build build --target docs
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./build/docs/html
+        cname: yourproject.github.io

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "name": "cpp-project-template",
+  "version-string": "1.0.0",
+  "description": "A modern C++ project template with best practices",
+  "homepage": "https://github.com/yourorg/cpp-project-template",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "testing": {
+      "description": "Enable testing dependencies",
+      "dependencies": [
+        "catch2",
+        "gtest"
+      ]
+    },
+    "networking": {
+      "description": "Enable networking libraries",
+      "dependencies": [
+        "cpprestsdk",
+        "curl"
+      ]
+    },
+    "json": {
+      "description": "Enable JSON processing",
+      "dependencies": [
+        "nlohmann-json",
+        "rapidjson"
+      ]
+    },
+    "crypto": {
+      "description": "Enable cryptographic libraries",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "gui": {
+      "description": "Enable GUI libraries",
+      "dependencies": [
+        "qt5-base",
+        "imgui"
+      ]
+    },
+    "database": {
+      "description": "Enable database connectivity",
+      "dependencies": [
+        "sqlite3",
+        "postgresql"
+      ]
+    }
+  }
+}
