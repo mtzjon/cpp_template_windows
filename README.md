@@ -45,7 +45,7 @@ A modern, production-ready C++ project template featuring the latest best practi
 - **vcpkg** for C++ dependencies
 - **FetchContent** for header-only libraries
 - **CPack** for distribution packages (NSIS, ZIP)
-- **CMake targets** for easy integration
+- **Modern dependency management** patterns
 
 ### 👥 **Team Collaboration**
 - **Git hooks** ready configuration
@@ -231,6 +231,13 @@ ctest --preset release -R "Logger"
 1. **vcpkg dependencies:** Add to `vcpkg.json` features
 2. **FetchContent:** Add to main `CMakeLists.txt`
 3. **System packages:** Use `find_package()` in CMake
+
+### Converting to a Library
+If you want to make this project into a reusable library:
+1. Add CMake export targets back to `CMakeLists.txt`
+2. Create a `Config.cmake.in` template
+3. Change dependency linking from PRIVATE to PUBLIC as needed
+4. Add proper installation rules for the library target
 
 ### Extending CI/CD
 - Modify `.github/workflows/` for custom build steps

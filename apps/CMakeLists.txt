@@ -12,7 +12,7 @@ set_target_properties(${PROJECT_NAME}_app PROPERTIES
 # Link libraries
 target_link_libraries(${PROJECT_NAME}_app
     PRIVATE
-        ${PROJECT_NAME}::${PROJECT_NAME}
+        ${PROJECT_NAME}
         CLI11::CLI11
         fmt::fmt
         spdlog::spdlog
@@ -25,7 +25,4 @@ else()
     target_compile_options(${PROJECT_NAME}_app PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
-# Install the executable
-install(TARGETS ${PROJECT_NAME}_app
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
+# Installation is handled in main CMakeLists.txt
