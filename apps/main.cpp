@@ -11,11 +11,12 @@ using namespace cpp_project_template;
 
 /**
  * @brief Main application entry point
- * 
+ *
  * Demonstrates modern C++ features and the project's logging capabilities.
  */
 int main(int argc, char* argv[]) {
-    CLI::App app{"C++ Project Template - A modern C++ application example", "cpp-project-template"};
+    CLI::App app{"C++ Project Template - A modern C++ application example",
+                 "cpp-project-template"};
     app.set_version_flag("--version", "1.0.0");
 
     // Command line options
@@ -24,9 +25,10 @@ int main(int argc, char* argv[]) {
     bool verbose = false;
     std::vector<std::string> inputs;
 
-    app.add_option("-l,--log-level", logLevel, "Set log level (trace,debug,info,warning,error,critical)")
+    app.add_option("-l,--log-level", logLevel,
+                   "Set log level (trace,debug,info,warning,error,critical)")
         ->check(CLI::IsMember({"trace", "debug", "info", "warning", "error", "critical"}));
-    
+
     app.add_option("-m,--message", message, "Custom message to display");
     app.add_flag("-v,--verbose", verbose, "Enable verbose output");
     app.add_option("inputs", inputs, "Input files to process");
@@ -39,12 +41,18 @@ int main(int argc, char* argv[]) {
 
         // Set log level based on command line argument
         Logger::Level level = Logger::Level::Info;
-        if (logLevel == "trace") level = Logger::Level::Trace;
-        else if (logLevel == "debug") level = Logger::Level::Debug;
-        else if (logLevel == "info") level = Logger::Level::Info;
-        else if (logLevel == "warning") level = Logger::Level::Warning;
-        else if (logLevel == "error") level = Logger::Level::Error;
-        else if (logLevel == "critical") level = Logger::Level::Critical;
+        if (logLevel == "trace")
+            level = Logger::Level::Trace;
+        else if (logLevel == "debug")
+            level = Logger::Level::Debug;
+        else if (logLevel == "info")
+            level = Logger::Level::Info;
+        else if (logLevel == "warning")
+            level = Logger::Level::Warning;
+        else if (logLevel == "error")
+            level = Logger::Level::Error;
+        else if (logLevel == "critical")
+            level = Logger::Level::Critical;
 
         auto& logger = getGlobalLogger();
         logger.setLevel(level);
@@ -88,7 +96,8 @@ int main(int argc, char* argv[]) {
             }
             
             const double average = sum / static_cast<double>(data.size());
-            logger.debug("Calculated average: {:.2f} from {} values", average, data.size());
+            logger.debug("Calculated average: {:.2f} from {} values", average,
+                         data.size());
             return average;
         };
 

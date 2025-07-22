@@ -76,7 +76,12 @@ A modern, production-ready C++ project template featuring the latest best practi
    cd cpp-project-template
    ```
 
-2. **Configure and build using CMake presets:**
+2. **Quick setup (Windows):**
+   ```batch
+   scripts\setup.bat
+   ```
+
+3. **Manual configuration using CMake presets:**
    ```bash
    # For Visual Studio (Windows)
    cmake --preset msvc-release
@@ -87,12 +92,12 @@ A modern, production-ready C++ project template featuring the latest best practi
    cmake --build --preset release
    ```
 
-3. **Run tests:**
+4. **Run tests:**
    ```bash
    ctest --preset release
    ```
 
-4. **Generate documentation:**
+5. **Generate documentation:**
    ```bash
    cmake --build --preset release --target docs
    ```
@@ -170,7 +175,10 @@ Enable features by configuring vcpkg:
 
 ### Formatting
 ```bash
-# Format all source files
+# Format all source files (Windows)
+scripts\format.bat
+
+# Or using CMake target
 cmake --build --preset release --target clang-format
 ```
 

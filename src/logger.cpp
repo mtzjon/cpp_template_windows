@@ -1,37 +1,37 @@
 #include "cpp_project_template/logger.hpp"
 
-#include <spdlog/spdlog.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
 #include <fmt/format.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
 
 #include <stdexcept>
 
 namespace cpp_project_template {
 
 namespace {
+// Global logger instance
+std::unique_ptr<Logger> g_logger;
+}  // namespace
+
 // Convert our enum to spdlog level
-spdlog::level::level_enum toSpdlogLevel(Logger::Level level) {
+spdlog::level::level_enum Logger::toSpdlogLevel(Level level) {
     switch (level) {
-        case Logger::Level::Trace:
+        case Level::Trace:
             return spdlog::level::trace;
-        case Logger::Level::Debug:
+        case Level::Debug:
             return spdlog::level::debug;
-        case Logger::Level::Info:
+        case Level::Info:
             return spdlog::level::info;
-        case Logger::Level::Warning:
+        case Level::Warning:
             return spdlog::level::warn;
-        case Logger::Level::Error:
+        case Level::Error:
             return spdlog::level::err;
-        case Logger::Level::Critical:
+        case Level::Critical:
             return spdlog::level::critical;
         default:
             return spdlog::level::info;
     }
 }
-
-// Global logger instance
-std::unique_ptr<Logger> g_logger;
-}  // namespace
 
 Logger::Logger(std::string_view name) {
     logger_ = spdlog::stdout_color_mt(std::string{name});
@@ -98,14 +98,18 @@ void Logger::log(Level level, fmt::format_string<Args...> format, Args&&... args
 }
 
 // Explicit instantiations for common use cases
-template void Logger::log<>(Level, fmt::format_string<>, ...);
 template void Logger::log<int>(Level, fmt::format_string<int>, int&&);
+template void Logger::log<double>(Level, fmt::format_string<double>, double&&);
 template void Logger::log<std::string>(Level, fmt::format_string<std::string>, std::string&&);
 template void Logger::log<const char*>(Level, fmt::format_string<const char*>, const char*&&);
+template void Logger::log<std::string_view>(Level, fmt::format_string<std::string_view>, 
+                                           std::string_view&&);
+template void Logger::log<bool>(Level, fmt::format_string<bool>, bool&&);
 
 Logger& getGlobalLogger() {
     if (!g_logger) {
-        throw std::runtime_error("Global logger not initialized. Call initializeGlobalLogger() first.");
+        throw std::runtime_error(
+            "Global logger not initialized. Call initializeGlobalLogger() first.");
     }
     return *g_logger;
 }

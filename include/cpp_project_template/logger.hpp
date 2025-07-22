@@ -4,9 +4,14 @@
 #include <string>
 #include <string_view>
 
+#include <fmt/format.h>
+
 namespace spdlog {
 class logger;
+namespace level {
+enum level_enum : int;
 }
+}  // namespace spdlog
 
 namespace cpp_project_template {
 
@@ -94,6 +99,9 @@ class Logger {
 
   private:
     std::unique_ptr<spdlog::logger> logger_;
+    
+    // Helper function to convert our enum to spdlog level
+    static spdlog::level::level_enum toSpdlogLevel(Level level);
 };
 
 /**
