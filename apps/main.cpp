@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
         // Demonstrate logging at different levels
         logger.info("Application started successfully");
         logger.debug("Debug mode: {}", verbose ? "enabled" : "disabled");
-        
+
         if (verbose) {
             logger.trace("Verbose mode enabled - showing detailed information");
             logger.debug("Command line arguments processed");
@@ -94,17 +94,16 @@ int main(int argc, char* argv[]) {
             for (const auto& value : data) {
                 sum += value;
             }
-            
+
             const double average = sum / static_cast<double>(data.size());
-            logger.debug("Calculated average: {:.2f} from {} values", average,
-                         data.size());
+            logger.debug("Calculated average: {:.2f} from {} values", average, data.size());
             return average;
         };
 
         // Sample data processing
         const std::vector<int> sampleData{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         const double result = processData(sampleData);
-        
+
         logger.info("Sample calculation result: {:.2f}", result);
 
         // Demonstrate error handling

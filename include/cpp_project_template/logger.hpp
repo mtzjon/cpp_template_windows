@@ -17,7 +17,7 @@ namespace cpp_project_template {
 
 /**
  * @brief A modern C++ logging utility wrapper around spdlog
- * 
+ *
  * This class provides a clean interface for logging functionality
  * with various log levels and formatting support.
  */
@@ -99,7 +99,7 @@ class Logger {
 
   private:
     std::unique_ptr<spdlog::logger> logger_;
-    
+
     // Helper function to convert our enum to spdlog level
     static spdlog::level::level_enum toSpdlogLevel(Level level);
 };

@@ -102,8 +102,8 @@ template void Logger::log<int>(Level, fmt::format_string<int>, int&&);
 template void Logger::log<double>(Level, fmt::format_string<double>, double&&);
 template void Logger::log<std::string>(Level, fmt::format_string<std::string>, std::string&&);
 template void Logger::log<const char*>(Level, fmt::format_string<const char*>, const char*&&);
-template void Logger::log<std::string_view>(Level, fmt::format_string<std::string_view>, 
-                                           std::string_view&&);
+template void Logger::log<std::string_view>(Level, fmt::format_string<std::string_view>,
+                                            std::string_view&&);
 template void Logger::log<bool>(Level, fmt::format_string<bool>, bool&&);
 
 Logger& getGlobalLogger() {

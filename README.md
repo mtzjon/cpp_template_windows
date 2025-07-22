@@ -79,6 +79,9 @@ A modern, production-ready C++ project template featuring the latest best practi
 2. **Quick setup (Windows):**
    ```batch
    scripts\setup.bat
+   
+   # Or verify everything works:
+   scripts\verify_build.bat
    ```
 
 3. **Manual configuration using CMake presets:**
@@ -133,11 +136,13 @@ cpp-project-template/
 ├── src/                        # Library source code
 ├── apps/                       # Executable applications
 ├── tests/                      # Unit and integration tests
+├── scripts/                    # Setup and utility scripts
 ├── CMakeLists.txt             # Main CMake configuration
 ├── CMakePresets.json          # Build presets
 ├── vcpkg.json                 # Package dependencies
 ├── .clang-format              # Code formatting rules
 ├── .clang-tidy                # Static analysis configuration
+├── .editorconfig              # Editor consistency
 └── README.md                  # Project documentation
 ```
 

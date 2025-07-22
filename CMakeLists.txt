@@ -1,5 +1,13 @@
 cmake_minimum_required(VERSION 3.21)
 
+# Suppress deprecation warnings from dependencies
+if(POLICY CMP0077)
+    cmake_policy(SET CMP0077 NEW)
+endif()
+if(POLICY CMP0135)
+    cmake_policy(SET CMP0135 NEW)
+endif()
+
 # Set the project name and version
 project(
     CppProjectTemplate
