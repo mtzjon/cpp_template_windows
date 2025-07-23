@@ -10,8 +10,8 @@ namespace spdlog {
 class logger;
 namespace level {
 enum level_enum : int;
-}
-}  // namespace spdlog
+} // namespace level
+} // namespace spdlog
 
 namespace cpp_project_template {
 
@@ -26,7 +26,7 @@ class Logger {
     /**
      * @brief Log levels supported by the logger
      */
-    enum class Level { Trace, Debug, Info, Warning, Error, Critical };
+    enum class Level { TRACE, DEBUG, INFO, WARN, ERR, CRITICAL };
 
     /**
      * @brief Constructor
@@ -169,6 +169,6 @@ Logger& getGlobalLogger();
  * @param name The name for the global logger
  * @param level The initial log level
  */
-void initializeGlobalLogger(std::string_view name, Logger::Level level = Logger::Level::Info);
+void initializeGlobalLogger(std::string_view name, Logger::Level level = Logger::Level::INFO);
 
 }  // namespace cpp_project_template

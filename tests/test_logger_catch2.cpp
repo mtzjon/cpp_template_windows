@@ -24,12 +24,12 @@ TEST_CASE("Logger Levels", "[logger]") {
     Logger logger("test_logger");
 
     SECTION("Set different log levels") {
-        REQUIRE_NOTHROW(logger.setLevel(Logger::Level::Trace));
-        REQUIRE_NOTHROW(logger.setLevel(Logger::Level::Debug));
-        REQUIRE_NOTHROW(logger.setLevel(Logger::Level::Info));
-        REQUIRE_NOTHROW(logger.setLevel(Logger::Level::Warning));
-        REQUIRE_NOTHROW(logger.setLevel(Logger::Level::Error));
-        REQUIRE_NOTHROW(logger.setLevel(Logger::Level::Critical));
+        REQUIRE_NOTHROW(logger.setLevel(Logger::Level::TRACE));
+        REQUIRE_NOTHROW(logger.setLevel(Logger::Level::DEBUG));
+        REQUIRE_NOTHROW(logger.setLevel(Logger::Level::INFO));
+        REQUIRE_NOTHROW(logger.setLevel(Logger::Level::WARN));
+        REQUIRE_NOTHROW(logger.setLevel(Logger::Level::ERR));
+        REQUIRE_NOTHROW(logger.setLevel(Logger::Level::CRITICAL));
     }
 }
 
@@ -64,7 +64,7 @@ TEST_CASE("Global Logger", "[logger][global]") {
 
         auto& logger = getGlobalLogger();
         REQUIRE_NOTHROW(logger.info("Global logger test"));
-        REQUIRE_NOTHROW(logger.setLevel(Logger::Level::Debug));
+        REQUIRE_NOTHROW(logger.setLevel(Logger::Level::DEBUG));
     }
 }
 

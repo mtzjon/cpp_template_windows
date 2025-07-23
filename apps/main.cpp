@@ -40,19 +40,19 @@ int main(int argc, char* argv[]) {
         initializeGlobalLogger("CppProjectTemplate");
 
         // Set log level based on command line argument
-        Logger::Level level = Logger::Level::Info;
+        Logger::Level level = Logger::Level::INFO;
         if (logLevel == "trace")
-            level = Logger::Level::Trace;
+            level = Logger::Level::TRACE;
         else if (logLevel == "debug")
-            level = Logger::Level::Debug;
+            level = Logger::Level::DEBUG;
         else if (logLevel == "info")
-            level = Logger::Level::Info;
+            level = Logger::Level::INFO;
         else if (logLevel == "warning")
-            level = Logger::Level::Warning;
+            level = Logger::Level::WARN;
         else if (logLevel == "error")
-            level = Logger::Level::Error;
+            level = Logger::Level::ERR;
         else if (logLevel == "critical")
-            level = Logger::Level::Critical;
+            level = Logger::Level::CRITICAL;
 
         auto& logger = getGlobalLogger();
         logger.setLevel(level);

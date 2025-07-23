@@ -2,7 +2,7 @@
 FetchContent_Declare(
     Catch2
     GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    GIT_TAG        v3.4.0
+    GIT_TAG        v3.8.1
 )
 FetchContent_MakeAvailable(Catch2)
 
@@ -10,7 +10,7 @@ FetchContent_MakeAvailable(Catch2)
 FetchContent_Declare(
     googletest
     GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG        v1.14.0
+    GIT_TAG        v1.17.0
 )
 FetchContent_MakeAvailable(googletest)
 

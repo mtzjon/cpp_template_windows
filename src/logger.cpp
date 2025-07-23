@@ -16,17 +16,17 @@ std::unique_ptr<Logger> g_logger;
 // Convert our enum to spdlog level
 spdlog::level::level_enum Logger::toSpdlogLevel(Level level) {
     switch (level) {
-        case Level::Trace:
+        case Level::TRACE:
             return spdlog::level::trace;
-        case Level::Debug:
+        case Level::DEBUG:
             return spdlog::level::debug;
-        case Level::Info:
+        case Level::INFO:
             return spdlog::level::info;
-        case Level::Warning:
+        case Level::WARN:
             return spdlog::level::warn;
-        case Level::Error:
+        case Level::ERR:
             return spdlog::level::err;
-        case Level::Critical:
+        case Level::CRITICAL:
             return spdlog::level::critical;
         default:
             return spdlog::level::info;
@@ -34,6 +34,9 @@ spdlog::level::level_enum Logger::toSpdlogLevel(Level level) {
 }
 
 Logger::Logger(std::string_view name) {
+    if (logger_ && name == logger_->name()) {
+        return;
+    }
     logger_ = spdlog::stdout_color_mt(std::string{name});
     if (!logger_) {
         throw std::runtime_error("Failed to create logger");
@@ -92,32 +95,32 @@ void Logger::critical(std::string_view message) {
 // Template method implementations
 template <typename... Args>
 void Logger::trace(fmt::format_string<Args...> format, Args&&... args) {
-    log(Level::Trace, format, std::forward<Args>(args)...);
+    log(Level::TRACE, format, std::forward<Args>(args)...);
 }
 
 template <typename... Args>
 void Logger::debug(fmt::format_string<Args...> format, Args&&... args) {
-    log(Level::Debug, format, std::forward<Args>(args)...);
+    log(Level::DEBUG, format, std::forward<Args>(args)...);
 }
 
 template <typename... Args>
 void Logger::info(fmt::format_string<Args...> format, Args&&... args) {
-    log(Level::Info, format, std::forward<Args>(args)...);
+    log(Level::INFO, format, std::forward<Args>(args)...);
 }
 
 template <typename... Args>
 void Logger::warning(fmt::format_string<Args...> format, Args&&... args) {
-    log(Level::Warning, format, std::forward<Args>(args)...);
+    log(Level::WARN, format, std::forward<Args>(args)...);
 }
 
 template <typename... Args>
 void Logger::error(fmt::format_string<Args...> format, Args&&... args) {
-    log(Level::Error, format, std::forward<Args>(args)...);
+    log(Level::ERR, format, std::forward<Args>(args)...);
 }
 
 template <typename... Args>
 void Logger::critical(fmt::format_string<Args...> format, Args&&... args) {
-    log(Level::Critical, format, std::forward<Args>(args)...);
+    log(Level::CRITICAL, format, std::forward<Args>(args)...);
 }
 
 template <typename... Args>

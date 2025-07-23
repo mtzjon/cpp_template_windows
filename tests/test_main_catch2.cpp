@@ -13,7 +13,7 @@ using namespace cpp_project_template;
 TEST_CASE("Integration Tests", "[integration]") {
     SECTION("Logger initialization and multiple operations") {
         // Initialize a logger for integration testing
-        initializeGlobalLogger("integration_test", Logger::Level::Debug);
+        initializeGlobalLogger("integration_test", Logger::Level::DEBUG);
         auto& logger = getGlobalLogger();
 
         // Perform multiple operations
@@ -49,7 +49,7 @@ TEST_CASE("Integration Tests", "[integration]") {
 TEST_CASE("Performance Tests", "[performance]") {
     SECTION("Logger performance with many messages") {
         Logger logger("perf_test");
-        logger.setLevel(Logger::Level::Info);
+        logger.setLevel(Logger::Level::INFO);
 
         // Log many messages quickly
         const int messageCount = 1000;
@@ -65,12 +65,12 @@ TEST_CASE("Performance Tests", "[performance]") {
         Logger logger("level_perf_test");
 
         // Test all levels
-        std::vector<Logger::Level> levels = {Logger::Level::Trace,
-                                             Logger::Level::Debug,
-                                             Logger::Level::Info,
-                                             Logger::Level::Warning,
-                                             Logger::Level::Error,
-                                             Logger::Level::Critical};
+        std::vector<Logger::Level> levels = {Logger::Level::TRACE,
+                                             Logger::Level::DEBUG,
+                                             Logger::Level::INFO,
+                                             Logger::Level::WARN,
+                                             Logger::Level::ERR,
+                                             Logger::Level::CRITICAL};
 
         for (auto level : levels) {
             logger.setLevel(level);

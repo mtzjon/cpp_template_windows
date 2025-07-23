@@ -42,8 +42,8 @@ TEST_F(LoggerTest, LoggerIsMovable) {
 
 TEST_F(LoggerTest, SetLevelDoesNotThrow) {
     Logger logger("test_logger");
-    EXPECT_NO_THROW(logger.setLevel(Logger::Level::Debug));
-    EXPECT_NO_THROW(logger.setLevel(Logger::Level::Error));
+    EXPECT_NO_THROW(logger.setLevel(Logger::Level::DEBUG));
+    EXPECT_NO_THROW(logger.setLevel(Logger::Level::ERR));
 }
 
 TEST_F(LoggerTest, LoggingMethodsDoNotThrow) {
@@ -95,9 +95,9 @@ TEST_P(LoggerLevelTest, AllLevelsWork) {
 }
 
 INSTANTIATE_TEST_SUITE_P(LoggerLevels, LoggerLevelTest,
-                         ::testing::Values(Logger::Level::Trace, Logger::Level::Debug,
-                                           Logger::Level::Info, Logger::Level::Warning,
-                                           Logger::Level::Error, Logger::Level::Critical));
+                         ::testing::Values(Logger::Level::TRACE, Logger::Level::DEBUG,
+                                           Logger::Level::INFO, Logger::Level::WARN,
+                                           Logger::Level::ERR, Logger::Level::CRITICAL));
 
 // Global logger tests
 class GlobalLoggerTest : public ::testing::Test {
@@ -117,11 +117,11 @@ TEST_F(GlobalLoggerTest, InitializationWorks) {
 }
 
 TEST_F(GlobalLoggerTest, GlobalLoggerFunctionality) {
-    initializeGlobalLogger("global_func_test", Logger::Level::Debug);
+    initializeGlobalLogger("global_func_test", Logger::Level::DEBUG);
     auto& logger = getGlobalLogger();
 
     EXPECT_NO_THROW(logger.info("Global logger test"));
-    EXPECT_NO_THROW(logger.setLevel(Logger::Level::Warning));
+    EXPECT_NO_THROW(logger.setLevel(Logger::Level::WARN));
     EXPECT_NO_THROW(logger.error("Error message"));
 }
 
@@ -135,7 +135,7 @@ TEST(LoggerDeathTest, UninitializedGlobalLoggerThrows) {
 // Performance benchmark test
 TEST_F(LoggerTest, PerformanceBenchmark) {
     Logger logger("perf_test");
-    logger.setLevel(Logger::Level::Info);
+    logger.setLevel(Logger::Level::INFO);
 
     auto start = std::chrono::high_resolution_clock::now();
 
