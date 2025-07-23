@@ -98,7 +98,7 @@ class Logger {
     void log(Level level, fmt::format_string<Args...> format, Args&&... args);
 
   private:
-    std::unique_ptr<spdlog::logger> logger_;
+    std::shared_ptr<spdlog::logger> logger_;
 
     // Helper function to convert our enum to spdlog level
     static spdlog::level::level_enum toSpdlogLevel(Level level);

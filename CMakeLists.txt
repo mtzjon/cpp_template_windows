@@ -67,23 +67,25 @@ find_package(PkgConfig QUIET)
 FetchContent_Declare(
     fmt
     GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-    GIT_TAG        10.1.1
+    GIT_TAG        11.2.0
 )
+set(FMT_INSTALL ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(fmt)
 
 # Add spdlog library
 FetchContent_Declare(
     spdlog
     GIT_REPOSITORY https://github.com/gabime/spdlog.git
-    GIT_TAG        v1.12.0
+    GIT_TAG        v1.15.3
 )
+set(SPDLOG_INSTALL ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(spdlog)
 
 # Add CLI11 for command line parsing
 FetchContent_Declare(
     CLI11
     GIT_REPOSITORY https://github.com/CLIUtils/CLI11.git
-    GIT_TAG        v2.3.2
+    GIT_TAG        v2.5.0
 )
 FetchContent_MakeAvailable(CLI11)
 
@@ -144,10 +146,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
-endif()
 
-# Install headers and package files only if this is the main project
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     install(DIRECTORY include/
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
         FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
@@ -171,7 +170,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
     )
-
+    
     install(EXPORT ${PROJECT_NAME}Targets
         FILE ${PROJECT_NAME}Targets.cmake
         NAMESPACE ${PROJECT_NAME}::

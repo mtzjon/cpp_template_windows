@@ -9,6 +9,9 @@ if(DOXYGEN_FOUND)
     set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
     set(DOXYFILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
 
+    # Configure Doxygen install directory
+    set(CMAKE_INSTALL_DOCDIR ${CMAKE_INSTALL_PREFIX}/docs)
+
     # Replace variables in Doxyfile.in
     configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
 
@@ -25,10 +28,10 @@ if(DOXYGEN_FOUND)
         COMMENT "Generating API documentation with Doxygen"
         VERBATIM
     )
-
+    
     # Create a custom target for documentation
     add_custom_target(docs ALL DEPENDS ${DOXYGEN_INDEX_FILE})
-
+    
     # Install documentation
     install(DIRECTORY ${DOXYGEN_OUTPUT_DIR}/html 
             DESTINATION ${CMAKE_INSTALL_DOCDIR}
