@@ -3,6 +3,7 @@
 
 #include "cpp_project_template/logger.hpp"
 
+#include <chrono>
 #include <memory>
 #include <stdexcept>
 #include <string>

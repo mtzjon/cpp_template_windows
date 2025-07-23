@@ -89,6 +89,37 @@ void Logger::critical(std::string_view message) {
     }
 }
 
+// Template method implementations
+template <typename... Args>
+void Logger::trace(fmt::format_string<Args...> format, Args&&... args) {
+    log(Level::Trace, format, std::forward<Args>(args)...);
+}
+
+template <typename... Args>
+void Logger::debug(fmt::format_string<Args...> format, Args&&... args) {
+    log(Level::Debug, format, std::forward<Args>(args)...);
+}
+
+template <typename... Args>
+void Logger::info(fmt::format_string<Args...> format, Args&&... args) {
+    log(Level::Info, format, std::forward<Args>(args)...);
+}
+
+template <typename... Args>
+void Logger::warning(fmt::format_string<Args...> format, Args&&... args) {
+    log(Level::Warning, format, std::forward<Args>(args)...);
+}
+
+template <typename... Args>
+void Logger::error(fmt::format_string<Args...> format, Args&&... args) {
+    log(Level::Error, format, std::forward<Args>(args)...);
+}
+
+template <typename... Args>
+void Logger::critical(fmt::format_string<Args...> format, Args&&... args) {
+    log(Level::Critical, format, std::forward<Args>(args)...);
+}
+
 template <typename... Args>
 void Logger::log(Level level, fmt::format_string<Args...> format, Args&&... args) {
     if (logger_) {
@@ -98,13 +129,69 @@ void Logger::log(Level level, fmt::format_string<Args...> format, Args&&... args
 }
 
 // Explicit instantiations for common use cases
+template void Logger::trace<int>(fmt::format_string<int>, int&&);
+template void Logger::trace<double>(fmt::format_string<double>, double&&);
+template void Logger::trace<std::string>(fmt::format_string<std::string>, std::string&&);
+template void Logger::trace<const char*>(fmt::format_string<const char*>, const char*&&);
+template void Logger::trace<std::string_view>(fmt::format_string<std::string_view>, std::string_view&&);
+template void Logger::trace<bool>(fmt::format_string<bool>, bool&&);
+
+template void Logger::debug<int>(fmt::format_string<int>, int&&);
+template void Logger::debug<double>(fmt::format_string<double>, double&&);
+template void Logger::debug<std::string>(fmt::format_string<std::string>, std::string&&);
+template void Logger::debug<const char*>(fmt::format_string<const char*>, const char*&&);
+template void Logger::debug<std::string_view>(fmt::format_string<std::string_view>, std::string_view&&);
+template void Logger::debug<bool>(fmt::format_string<bool>, bool&&);
+
+template void Logger::info<int>(fmt::format_string<int>, int&&);
+template void Logger::info<double>(fmt::format_string<double>, double&&);
+template void Logger::info<std::string>(fmt::format_string<std::string>, std::string&&);
+template void Logger::info<const char*>(fmt::format_string<const char*>, const char*&&);
+template void Logger::info<std::string_view>(fmt::format_string<std::string_view>, std::string_view&&);
+template void Logger::info<bool>(fmt::format_string<bool>, bool&&);
+template void Logger::info<size_t>(fmt::format_string<size_t>, size_t&&);
+
+template void Logger::warning<int>(fmt::format_string<int>, int&&);
+template void Logger::warning<double>(fmt::format_string<double>, double&&);
+template void Logger::warning<std::string>(fmt::format_string<std::string>, std::string&&);
+template void Logger::warning<const char*>(fmt::format_string<const char*>, const char*&&);
+template void Logger::warning<std::string_view>(fmt::format_string<std::string_view>, std::string_view&&);
+template void Logger::warning<bool>(fmt::format_string<bool>, bool&&);
+
+template void Logger::error<int>(fmt::format_string<int>, int&&);
+template void Logger::error<double>(fmt::format_string<double>, double&&);
+template void Logger::error<std::string>(fmt::format_string<std::string>, std::string&&);
+template void Logger::error<const char*>(fmt::format_string<const char*>, const char*&&);
+template void Logger::error<std::string_view>(fmt::format_string<std::string_view>, std::string_view&&);
+template void Logger::error<bool>(fmt::format_string<bool>, bool&&);
+
+template void Logger::critical<int>(fmt::format_string<int>, int&&);
+template void Logger::critical<double>(fmt::format_string<double>, double&&);
+template void Logger::critical<std::string>(fmt::format_string<std::string>, std::string&&);
+template void Logger::critical<const char*>(fmt::format_string<const char*>, const char*&&);
+template void Logger::critical<std::string_view>(fmt::format_string<std::string_view>, std::string_view&&);
+template void Logger::critical<bool>(fmt::format_string<bool>, bool&&);
+
 template void Logger::log<int>(Level, fmt::format_string<int>, int&&);
 template void Logger::log<double>(Level, fmt::format_string<double>, double&&);
 template void Logger::log<std::string>(Level, fmt::format_string<std::string>, std::string&&);
 template void Logger::log<const char*>(Level, fmt::format_string<const char*>, const char*&&);
-template void Logger::log<std::string_view>(Level, fmt::format_string<std::string_view>,
-                                            std::string_view&&);
+template void Logger::log<std::string_view>(Level, fmt::format_string<std::string_view>, std::string_view&&);
 template void Logger::log<bool>(Level, fmt::format_string<bool>, bool&&);
+template void Logger::log<size_t>(Level, fmt::format_string<size_t>, size_t&&);
+
+// Multi-argument templates for the cases in main.cpp
+template void Logger::debug<double, size_t>(fmt::format_string<double, size_t>, double&&, size_t&&);
+template void Logger::log<double, size_t>(Level, fmt::format_string<double, size_t>, double&&, size_t&&);
+
+// Additional instantiations for const references and lvalue references
+template void Logger::debug<const std::string&>(fmt::format_string<const std::string&>, const std::string&);
+template void Logger::debug<std::string&>(fmt::format_string<std::string&>, std::string&);
+template void Logger::info<const std::string&>(fmt::format_string<const std::string&>, const std::string&);
+template void Logger::info<std::string&>(fmt::format_string<std::string&>, std::string&);
+template void Logger::debug<const double&, size_t>(fmt::format_string<const double&, size_t>, const double&, size_t&&);
+template void Logger::info<const double&>(fmt::format_string<const double&>, const double&);
+template void Logger::info<int&>(fmt::format_string<int&>, int&);
 
 Logger& getGlobalLogger() {
     if (!g_logger) {
