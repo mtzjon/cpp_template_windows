@@ -46,7 +46,6 @@
     "gui": {
       "description": "Enable GUI libraries",
       "dependencies": [
-        "qt5-base",
         "imgui"
       ]
     },

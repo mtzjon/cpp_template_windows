@@ -106,6 +106,23 @@
             "output": {
                 "outputOnFailure": true
             }
+        },
+        {
+            "name": "msvc-debug",
+            "displayName": "MSVC Test Debug",
+            "configurePreset": "msvc-debug",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "msvc-release",
+            "displayName": "MSVC Test Release",
+            "configurePreset": "msvc-release",
+            "output": {
+                "outputOnFailure": true
+            }
         }
     ]
 }
+
