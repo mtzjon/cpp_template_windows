@@ -58,10 +58,28 @@ class Logger {
     void trace(std::string_view message);
 
     /**
+     * @brief Log a formatted message at trace level
+     * @tparam Args Variadic template arguments
+     * @param format The format string
+     * @param args The arguments to format
+     */
+    template <typename... Args>
+    void trace(fmt::format_string<Args...> format, Args&&... args);
+
+    /**
      * @brief Log a message at debug level
      * @param message The message to log
      */
     void debug(std::string_view message);
+
+    /**
+     * @brief Log a formatted message at debug level
+     * @tparam Args Variadic template arguments
+     * @param format The format string
+     * @param args The arguments to format
+     */
+    template <typename... Args>
+    void debug(fmt::format_string<Args...> format, Args&&... args);
 
     /**
      * @brief Log a message at info level
@@ -70,10 +88,28 @@ class Logger {
     void info(std::string_view message);
 
     /**
+     * @brief Log a formatted message at info level
+     * @tparam Args Variadic template arguments
+     * @param format The format string
+     * @param args The arguments to format
+     */
+    template <typename... Args>
+    void info(fmt::format_string<Args...> format, Args&&... args);
+
+    /**
      * @brief Log a message at warning level
      * @param message The message to log
      */
     void warning(std::string_view message);
+
+    /**
+     * @brief Log a formatted message at warning level
+     * @tparam Args Variadic template arguments
+     * @param format The format string
+     * @param args The arguments to format
+     */
+    template <typename... Args>
+    void warning(fmt::format_string<Args...> format, Args&&... args);
 
     /**
      * @brief Log a message at error level
@@ -82,10 +118,28 @@ class Logger {
     void error(std::string_view message);
 
     /**
+     * @brief Log a formatted message at error level
+     * @tparam Args Variadic template arguments
+     * @param format The format string
+     * @param args The arguments to format
+     */
+    template <typename... Args>
+    void error(fmt::format_string<Args...> format, Args&&... args);
+
+    /**
      * @brief Log a message at critical level
      * @param message The message to log
      */
     void critical(std::string_view message);
+
+    /**
+     * @brief Log a formatted message at critical level
+     * @tparam Args Variadic template arguments
+     * @param format The format string
+     * @param args The arguments to format
+     */
+    template <typename... Args>
+    void critical(fmt::format_string<Args...> format, Args&&... args);
 
     /**
      * @brief Format and log a message
