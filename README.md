@@ -1,257 +1,187 @@
-# C++ Project Template
+# C++ Robotics Geometry Library
 
-A modern, production-ready C++ project template featuring the latest best practices, automated tooling, and comprehensive CI/CD integration for Windows development.
+A comprehensive robotics and geometry library built with Eigen, providing mathematical utilities for robotics, mechanics, and 3D geometry applications.
 
-[![CI](https://github.com/yourorg/cpp-project-template/actions/workflows/ci.yml/badge.svg)](https://github.com/yourorg/cpp-project-template/actions/workflows/ci.yml)
-[![Release](https://github.com/yourorg/cpp-project-template/actions/workflows/release.yml/badge.svg)](https://github.com/yourorg/cpp-project-template/actions/workflows/release.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![C++](https://img.shields.io/badge/C%2B%2B-20-blue.svg)](https://isocpp.org/)
+## Overview
+
+This library extends Eigen with high-level geometric primitives and operations commonly used in robotics, computer vision, and mechanical engineering. It provides intuitive APIs for working with 3D poses, velocity vectors (twists), force vectors (wrenches), and coordinate transformations.
 
 ## Features
 
-### 🏗️ **Modern Build System**
-- **CMake 3.21+** with modern practices
-- **CMakePresets.json** for standardized build configurations
-- **vcpkg** integration for dependency management
-- **Cross-platform support** (Windows focus with Linux/macOS compatibility)
+### Core Geometry Types
 
-### 🔧 **Code Quality & Static Analysis**
-- **clang-format** integration with comprehensive style configuration
-- **clang-tidy** with extensive static analysis rules
-- **Compiler warnings** as errors (MSVC `/W4`, GCC/Clang `-Wall -Wextra -Wpedantic`)
-- **C++20** standard enforcement
+- **Pose3D**: 3D poses combining position (translation) and orientation (quaternion)
+- **Twist**: 6D velocity vectors representing linear and angular velocities
+- **Wrench**: 6D force vectors representing forces and torques
+- **Transforms**: Coordinate frame transformations and utilities
 
-### 🧪 **Testing Framework**
-- **Catch2** and **Google Test** integration
-- **Parameterized tests** and **fixtures**
-- **Performance benchmarks**
-- **CTest** integration with parallel execution
+### Mathematical Utilities
 
-### 📚 **Documentation**
-- **Doxygen** automatic documentation generation
-- **GitHub Pages** deployment
-- **Markdown support** with comprehensive README
-- **API documentation** with code examples
+- Angle normalization and conversion (degrees/radians)
+- Vector operations (projection, normalization, cross products)
+- Rotation utilities (axis-angle, Euler angles, rotation matrices)
+- Statistical functions (mean, covariance, PCA)
+- Distance metrics (Euclidean, Manhattan, Chebyshev)
 
-### 🚀 **CI/CD Pipeline**
-- **GitHub Actions** workflows for Windows
-- **Multi-configuration builds** (Debug/Release)
-- **Automated testing** on every PR
-- **Security scanning** with CodeQL
-- **Automatic releases** with package generation
-- **Artifact caching** for faster builds
+### Robotics Applications
 
-### 📦 **Package Management**
-- **vcpkg** for C++ dependencies
-- **FetchContent** for header-only libraries
-- **CPack** for distribution packages (NSIS, ZIP)
-- **CMake targets** for easy integration
+- Pose composition and interpolation
+- Adjoint transformations for twists and wrenches
+- Power calculations (wrench · twist)
+- Trajectory generation and analysis
+- Force analysis for robotic systems
 
-### 👥 **Team Collaboration**
-- **Git hooks** ready configuration
-- **Editor config** for consistent formatting
-- **Issue templates** and **PR templates**
-- **Code review** guidelines
+## Building the Project
 
-## Quick Start
+### Dependencies
 
-### Prerequisites
+- **Eigen3** (>= 3.4.0) - Linear algebra library
+- **CLI11** (>= 2.3.2) - Command-line interface library
+- **CMake** (>= 3.20) - Build system
+- **C++20 compatible compiler**
 
-**Windows:**
-- Visual Studio 2022 or later
-- CMake 3.21+
-- Git
-- vcpkg (optional, will be fetched automatically)
+### Build Instructions
 
-**Alternative (Cross-platform):**
-- Modern C++20 compiler (GCC 11+, Clang 13+)
-- CMake 3.21+
-- Ninja build system
+```bash
+# Install dependencies (Ubuntu/Debian)
+sudo apt-get update
+sudo apt-get install libeigen3-dev libcli11-dev cmake build-essential
 
-### Building the Project
+# Clone and build
+git clone <repository-url>
+cd cpp-robotics-geometry
+mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j4
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/yourorg/cpp-project-template.git
-   cd cpp-project-template
-   ```
+# Run demos
+./apps/CppProjectTemplate --demo basic
+./apps/CppProjectTemplate --demo transforms --verbose
+./apps/CppProjectTemplate --demo robotics
+```
 
-2. **Quick setup (Windows):**
-   ```batch
-   scripts\setup.bat
-   
-   # Or verify everything works:
-   scripts\verify_build.bat
-   ```
+## Usage Examples
 
-3. **Manual configuration using CMake presets:**
-   ```bash
-   # For Visual Studio (Windows)
-   cmake --preset msvc-release
-   cmake --build --preset msvc-release
-   
-   # For Ninja (Cross-platform)
-   cmake --preset release
-   cmake --build --preset release
-   ```
-
-4. **Run tests:**
-   ```bash
-   ctest --preset release
-   ```
-
-5. **Generate documentation:**
-   ```bash
-   cmake --build --preset release --target docs
-   ```
-
-### Usage Example
+### Basic Pose Operations
 
 ```cpp
-#include "cpp_project_template/logger.hpp"
+#include "cpp_project_template/geometry.hpp"
+using namespace cpp_project_template::geometry;
 
-int main() {
-    using namespace cpp_project_template;
-    
-    // Initialize the global logger
-    initializeGlobalLogger("MyApp", Logger::Level::Info);
-    auto& logger = getGlobalLogger();
-    
-    // Use modern C++ features
-    logger.info("Hello, Modern C++!");
-    logger.debug("Debug information: {}", 42);
-    
-    return 0;
-}
+// Create poses
+Pose3D pose1(Eigen::Vector3d(1, 2, 3), Eigen::Quaterniond::Identity());
+Pose3D pose2 = Pose3D::AxisAngle(Eigen::Vector3d::UnitZ(), utilities::degreesToRadians(45));
+
+// Compose poses
+Pose3D composed = pose1 * pose2;
+
+// Transform points
+Eigen::Vector3d point(0, 0, 1);
+Eigen::Vector3d transformed_point = pose1 * point;
 ```
 
-## Project Structure
+### Twist and Wrench Operations
 
-```
-cpp-project-template/
-├── .github/workflows/          # GitHub Actions CI/CD
-├── cmake/                      # CMake modules and configs
-├── docs/                       # Documentation configuration
-├── include/cpp_project_template/  # Public headers
-├── src/                        # Library source code
-├── apps/                       # Executable applications
-├── tests/                      # Unit and integration tests
-├── scripts/                    # Setup and utility scripts
-├── CMakeLists.txt             # Main CMake configuration
-├── CMakePresets.json          # Build presets
-├── vcpkg.json                 # Package dependencies
-├── .clang-format              # Code formatting rules
-├── .clang-tidy                # Static analysis configuration
-├── .editorconfig              # Editor consistency
-└── README.md                  # Project documentation
+```cpp
+// Create velocity vector
+Twist twist(Eigen::Vector3d(1, 0, 0),    // Linear velocity
+           Eigen::Vector3d(0, 0, 0.5));  // Angular velocity
+
+// Create force vector
+Wrench wrench = Wrench::PointForce(Eigen::Vector3d(10, 0, 0),  // Force
+                                  Eigen::Vector3d(0.5, 0, 0),  // Point of application
+                                  Eigen::Vector3d::Zero());    // Reference point
+
+// Calculate power
+double power = wrench.power(twist);  // P = F·v + τ·ω
 ```
 
-## Available CMake Presets
+### Coordinate Transformations
 
-| Preset | Description | Generator |
-|--------|-------------|-----------|
-| `default` | Default Ninja build | Ninja |
-| `debug` | Debug build with Ninja | Ninja |
-| `release` | Release build with Ninja | Ninja |
-| `msvc-debug` | MSVC Debug build | Visual Studio 2022 |
-| `msvc-release` | MSVC Release build | Visual Studio 2022 |
+```cpp
+// Transform between coordinate frames
+Pose3D robot_base = Pose3D::Translation(Eigen::Vector3d(5, 3, 0));
+Twist body_twist(Eigen::Vector3d(0.1, 0, 0), Eigen::Vector3d(0, 0, 0.5));
 
-## Dependencies
+// Convert from body frame to spatial frame
+Twist spatial_twist = transforms::transformTwist(body_twist, robot_base);
 
-### Core Dependencies (Fetched Automatically)
-- **fmt** - Modern formatting library
-- **spdlog** - Fast logging library
-- **CLI11** - Command line parser
-
-### Testing Dependencies
-- **Catch2** - Testing framework
-- **Google Test/Mock** - Alternative testing framework
-
-### Optional Features (vcpkg)
-Enable features by configuring vcpkg:
-- `testing` - Testing frameworks
-- `networking` - HTTP and networking libraries
-- `json` - JSON processing libraries
-- `crypto` - Cryptographic libraries
-- `gui` - GUI frameworks
-- `database` - Database connectivity
-
-## Code Quality Tools
-
-### Formatting
-```bash
-# Format all source files (Windows)
-scripts\format.bat
-
-# Or using CMake target
-cmake --build --preset release --target clang-format
+// Transform multiple points
+std::vector<Eigen::Vector3d> points = {/* ... */};
+auto transformed_points = transforms::transformPoints(points, robot_base);
 ```
 
-### Static Analysis
-```bash
-# Run clang-tidy
-cmake --build build/release
-find src apps tests -name '*.cpp' | xargs clang-tidy -p build/release
+## Library Structure
+
+```
+include/cpp_project_template/geometry/
+├── geometry.hpp          # Main header
+├── pose3d.hpp           # 3D pose class
+├── twist.hpp            # 6D twist (velocity) class
+├── wrench.hpp           # 6D wrench (force) class
+├── transforms.hpp       # Transformation utilities
+└── utilities.hpp        # Mathematical utilities
+
+src/
+├── pose3d.cpp
+├── twist.cpp
+├── wrench.cpp
+├── transforms.cpp
+└── utilities.cpp
 ```
 
-### Testing
-```bash
-# Run all tests
-cmake --build --preset release
-ctest --preset release --output-on-failure
+## Demo Applications
 
-# Run specific test suite
-ctest --preset release -R "Logger"
-```
+The library includes comprehensive demos showcasing:
+
+1. **Basic Operations** (`--demo basic`):
+   - Pose creation and composition
+   - Twist operations and magnitude calculations
+   - Wrench operations and power calculations
+
+2. **Transformations** (`--demo transforms`):
+   - Coordinate frame transformations
+   - Point cloud transformations
+   - Adjoint transformations for twists
+
+3. **Robotics Applications** (`--demo robotics`):
+   - Trajectory generation and analysis
+   - Velocity estimation between waypoints
+   - Force analysis with gravity and contact forces
+
+## Mathematical Background
+
+This library implements standard robotics mathematics:
+
+- **SE(3)** poses using quaternions for rotation representation
+- **se(3)** twists for velocity representation
+- **Adjoint transformations** for coordinate frame changes
+- **Screw theory** for unified treatment of motion and force
 
 ## Contributing
 
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
-
-### Code Standards
-- Follow the existing code style (enforced by clang-format)
-- Add tests for new functionality
-- Update documentation as needed
-- Ensure all CI checks pass
-
-## Customization
-
-### Renaming the Project
-1. Update `CMakeLists.txt` project name and description
-2. Rename the namespace in source files
-3. Update include directory structure
-4. Modify `vcpkg.json` metadata
-5. Update documentation and README
-
-### Adding Dependencies
-1. **vcpkg dependencies:** Add to `vcpkg.json` features
-2. **FetchContent:** Add to main `CMakeLists.txt`
-3. **System packages:** Use `find_package()` in CMake
-
-### Extending CI/CD
-- Modify `.github/workflows/` for custom build steps
-- Add deployment targets
-- Configure additional static analysis tools
-- Set up code coverage reporting
+1. Fork the repository
+2. Create a feature branch
+3. Add tests for new functionality
+4. Ensure all tests pass
+5. Submit a pull request
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
+## Dependencies and Acknowledgments
 
-- **CMake** community for modern CMake practices
-- **vcpkg** team for excellent package management
-- **Catch2** and **Google Test** teams for testing frameworks
-- **clang** team for excellent tooling support
-- **GitHub Actions** for CI/CD infrastructure
+- [Eigen](https://eigen.tuxfamily.org/) - Excellent linear algebra library
+- [CLI11](https://github.com/CLIUtils/CLI11) - Modern command-line parser
+- Modern C++ best practices and design patterns
 
----
+## Version
 
-**Ready to build something amazing? 🚀**
+Current version: 1.0.0
 
-This template provides everything you need to start a professional C++ project with modern tooling and best practices. Fork it, customize it, and build your next great application!
+For detailed API documentation, build with Doxygen:
+```bash
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make docs  # Requires Doxygen
+```

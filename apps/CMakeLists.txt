@@ -1,31 +1,23 @@
-# Main application
-add_executable(${PROJECT_NAME}_app main.cpp)
+# Create the main executable
+add_executable(CppProjectTemplate_app main.cpp)
 
-# Set target properties
-set_target_properties(${PROJECT_NAME}_app PROPERTIES
+# Set executable properties
+set_target_properties(CppProjectTemplate_app PROPERTIES
+    OUTPUT_NAME CppProjectTemplate
     CXX_STANDARD 20
     CXX_STANDARD_REQUIRED ON
-    CXX_EXTENSIONS OFF
-    OUTPUT_NAME ${PROJECT_NAME}
 )
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME}_app
+target_link_libraries(CppProjectTemplate_app
     PRIVATE
-        ${PROJECT_NAME}::${PROJECT_NAME}
+        CppProjectTemplate::CppProjectTemplate
         CLI11::CLI11
-        fmt::fmt
-        spdlog::spdlog
 )
 
-# Compiler-specific options
+# Compiler options
 if(MSVC)
-    target_compile_options(${PROJECT_NAME}_app PRIVATE /W4)
+    target_compile_options(CppProjectTemplate_app PRIVATE /W4)
 else()
-    target_compile_options(${PROJECT_NAME}_app PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(CppProjectTemplate_app PRIVATE -Wall -Wextra -Wpedantic)
 endif()
-
-# Install the executable
-install(TARGETS ${PROJECT_NAME}_app
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)

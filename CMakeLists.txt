@@ -1,194 +1,152 @@
-cmake_minimum_required(VERSION 3.21)
-
-# Suppress deprecation warnings from dependencies
-if(POLICY CMP0077)
-    cmake_policy(SET CMP0077 NEW)
-endif()
-if(POLICY CMP0135)
-    cmake_policy(SET CMP0135 NEW)
-endif()
+cmake_minimum_required(VERSION 3.20)
 
 # Set the project name and version
 project(
     CppProjectTemplate
     VERSION 1.0.0
-    DESCRIPTION "A modern C++ project template"
+    DESCRIPTION "A modern C++ project template with Eigen-based robotics and geometry utilities"
     LANGUAGES CXX
 )
 
-# Only do these if this is the main project, and not if it is included through add_subdirectory
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-    # Optionally set things like CMAKE_CXX_STANDARD, CMAKE_POSITION_INDEPENDENT_CODE here
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-    # Let's ensure -std=c++xx instead of -std=g++xx
-    set(CMAKE_CXX_EXTENSIONS OFF)
+# Set default build type if not specified
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
 
-    # Let's nicely support folders in IDEs
-    set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-    # Testing only available if this is the main app
-    # Note this needs to be done in the main CMakeLists
-    # since it calls enable_testing, which must be in the main CMakeLists.
-    include(CTest)
-
-    # Docs only available if this is the main app
-    find_package(Doxygen)
-    if(Doxygen_FOUND)
-        add_subdirectory(docs)
-    else()
-        message(STATUS "Doxygen not found, not building docs")
+# Global compiler-specific options
+if(MSVC)
+    add_compile_options(/W4 /permissive-)
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        add_compile_options(/O2)
+    endif()
+else()
+    add_compile_options(-Wall -Wextra -Wpedantic)
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        add_compile_options(-O3)
+    endif()
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        add_compile_options(-g -O0)
     endif()
 endif()
 
-# C++ standard
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Include guards for multiple inclusions
+include_guard(GLOBAL)
 
-# Compiler-specific options
-if(MSVC)
-    # Warning level 4 and all warnings as errors
-    add_compile_options(/W4 /WX)
-    # Enable additional security features
-    add_compile_options(/GS /guard:cf)
-    # Enable parallel compilation
-    add_compile_options(/MP)
+# Add custom CMake modules path
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+# Find vcpkg packages
+find_package(Eigen3 REQUIRED)
+find_package(CLI11 REQUIRED)
+
+# Find optional packages for testing
+find_package(Catch2 3 QUIET)
+find_package(GTest QUIET)
+
+# Documentation with Doxygen
+find_package(Doxygen QUIET)
+if(DOXYGEN_FOUND)
+    # Configure Doxygen
+    set(DOXYGEN_GENERATE_HTML YES)
+    set(DOXYGEN_GENERATE_MAN NO)
+    set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/docs")
+    set(DOXYGEN_PROJECT_NAME "${PROJECT_NAME}")
+    set(DOXYGEN_PROJECT_VERSION "${PROJECT_VERSION}")
+    set(DOXYGEN_PROJECT_DESCRIPTION "${PROJECT_DESCRIPTION}")
+    
+    # Create documentation target
+    doxygen_add_docs(
+        docs
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/README.md
+        COMMENT "Generating API documentation with Doxygen"
+    )
 else()
-    # Lots of warnings and all warnings as errors
-    add_compile_options(-Wall -Wextra -pedantic -Werror)
+    message(STATUS "Doxygen not found, not building docs")
 endif()
 
-# FetchContent for dependency management
-include(FetchContent)
-
-# Find packages
-find_package(PkgConfig QUIET)
-
-# Add fmt library
-FetchContent_Declare(
-    fmt
-    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-    GIT_TAG        11.2.0
-)
-set(FMT_INSTALL ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(fmt)
-
-# Add spdlog library
-FetchContent_Declare(
-    spdlog
-    GIT_REPOSITORY https://github.com/gabime/spdlog.git
-    GIT_TAG        v1.15.3
-)
-set(SPDLOG_INSTALL ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(spdlog)
-
-# Add CLI11 for command line parsing
-FetchContent_Declare(
-    CLI11
-    GIT_REPOSITORY https://github.com/CLIUtils/CLI11.git
-    GIT_TAG        v2.5.0
-)
-FetchContent_MakeAvailable(CLI11)
-
-# The compiled library code is here
+# Main library
 add_subdirectory(src)
 
-# The executable code is here
+# Applications
 add_subdirectory(apps)
 
-# Testing only available if this is the main app
-# Emergency override MODERN_CMAKE_BUILD_TESTING provided as well
-if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR MODERN_CMAKE_BUILD_TESTING) AND BUILD_TESTING)
+# Testing
+if(Catch2_FOUND AND BUILD_TESTING)
+    include(CTest)
+    enable_testing()
     add_subdirectory(tests)
+    message(STATUS "Building with Catch2 tests")
 endif()
 
-# Add clang-format target
-find_program(CLANG_FORMAT_EXECUTABLE clang-format)
-if(CLANG_FORMAT_EXECUTABLE)
-    file(GLOB_RECURSE ALL_CXX_SOURCE_FILES
-        ${CMAKE_SOURCE_DIR}/src/*.[ch]pp
-        ${CMAKE_SOURCE_DIR}/src/*.[ch]
-        ${CMAKE_SOURCE_DIR}/apps/*.[ch]pp
-        ${CMAKE_SOURCE_DIR}/apps/*.[ch]
-        ${CMAKE_SOURCE_DIR}/tests/*.[ch]pp
-        ${CMAKE_SOURCE_DIR}/tests/*.[ch]
-        ${CMAKE_SOURCE_DIR}/include/*.[ch]pp
-        ${CMAKE_SOURCE_DIR}/include/*.[ch]
-    )
-    
-    add_custom_target(
-        clang-format
-        COMMAND ${CLANG_FORMAT_EXECUTABLE}
-        -i
-        -style=file
-        ${ALL_CXX_SOURCE_FILES}
-    )
+if(GTest_FOUND AND BUILD_TESTING)
+    include(CTest)
+    enable_testing()
+    add_subdirectory(tests)
+    message(STATUS "Building with Google Test")
 endif()
 
-# Add clang-tidy target
-find_program(CLANG_TIDY_EXECUTABLE clang-tidy)
-if(CLANG_TIDY_EXECUTABLE)
-    set(CMAKE_CXX_CLANG_TIDY ${CLANG_TIDY_EXECUTABLE})
-endif()
-
-# Generate compile_commands.json for clang-based tools
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-# Package configuration
-include(CMakePackageConfigHelpers)
+# Installation configuration
 include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
 
-# Installation - only install if this is the main project
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-    install(TARGETS ${PROJECT_NAME}
-        EXPORT ${PROJECT_NAME}Targets
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    )
+# Install the library
+install(TARGETS CppProjectTemplate
+    EXPORT CppProjectTemplateTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
-    install(DIRECTORY include/
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-        FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
-    )
+# Install headers
+install(DIRECTORY include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
+)
 
-    # Generate and install package configuration files
-    configure_package_config_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
-        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-    )
+# Create and install package configuration files
+configure_package_config_file(
+    cmake/CppProjectTemplateConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/CppProjectTemplateConfig.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/CppProjectTemplate
+)
 
-    write_basic_package_version_file(
-        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-        VERSION ${PROJECT_VERSION}
-        COMPATIBILITY SameMajorVersion
-    )
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/CppProjectTemplateConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
 
-    install(FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-    )
-    
-    install(EXPORT ${PROJECT_NAME}Targets
-        FILE ${PROJECT_NAME}Targets.cmake
-        NAMESPACE ${PROJECT_NAME}::
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-    )
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/CppProjectTemplateConfig.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/CppProjectTemplateConfigVersion.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/CppProjectTemplate
+)
+
+install(EXPORT CppProjectTemplateTargets
+    FILE CppProjectTemplateTargets.cmake
+    NAMESPACE CppProjectTemplate::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/CppProjectTemplate
+)
+
+# Print build configuration
+message(STATUS "")
+message(STATUS "Configuration Summary:")
+message(STATUS "  Project: ${PROJECT_NAME} ${PROJECT_VERSION}")
+message(STATUS "  Build type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "  C++ standard: ${CMAKE_CXX_STANDARD}")
+message(STATUS "  Eigen3 version: ${Eigen3_VERSION}")
+if(Catch2_FOUND)
+    message(STATUS "  Catch2 version: ${Catch2_VERSION}")
 endif()
-
-# CPack configuration for packaging
-set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
-set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
-set(CPACK_PACKAGE_VENDOR "Your Company")
-set(CPACK_PACKAGE_CONTACT "your.email@company.com")
-
-if(WIN32)
-    set(CPACK_GENERATOR "NSIS;ZIP")
-    set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
-    set(CPACK_NSIS_MODIFY_PATH ON)
+if(GTest_FOUND)
+    message(STATUS "  GTest found: ${GTest_VERSION}")
 endif()
-
-include(CPack)
+message(STATUS "")

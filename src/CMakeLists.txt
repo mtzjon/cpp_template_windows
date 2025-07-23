@@ -1,50 +1,44 @@
-# Library sources
-set(LIBRARY_SOURCES
-    logger.cpp
+# Create the main library
+add_library(CppProjectTemplate 
+    pose3d.cpp
+    twist.cpp
+    wrench.cpp
+    transforms.cpp
+    utilities.cpp
 )
 
-set(LIBRARY_HEADERS
-    ${CMAKE_SOURCE_DIR}/include/cpp_project_template/logger.hpp
-)
+# Create alias for namespaced target
+add_library(CppProjectTemplate::CppProjectTemplate ALIAS CppProjectTemplate)
 
-# Create the library
-add_library(${PROJECT_NAME} ${LIBRARY_SOURCES} ${LIBRARY_HEADERS})
-add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-
-# Set target properties
-set_target_properties(${PROJECT_NAME} PROPERTIES
-    CXX_STANDARD 20
-    CXX_STANDARD_REQUIRED ON
-    CXX_EXTENSIONS OFF
+# Set library properties
+set_target_properties(CppProjectTemplate PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
-    EXPORT_NAME ${PROJECT_NAME}
+    EXPORT_NAME CppProjectTemplate
 )
 
-# Include directories
-target_include_directories(${PROJECT_NAME}
+# Target include directories
+target_include_directories(CppProjectTemplate
     PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+        $<INSTALL_INTERFACE:include>
 )
 
-# Link libraries
-target_link_libraries(${PROJECT_NAME}
+# Link dependencies
+target_link_libraries(CppProjectTemplate
     PUBLIC
-        fmt::fmt
-        spdlog::spdlog
+        Eigen3::Eigen
 )
 
-# Compiler-specific options
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+# Compiler features
+target_compile_features(CppProjectTemplate
+    PUBLIC
+        cxx_std_20
+)
 
+# Compiler options
 if(MSVC)
-    target_compile_options(${PROJECT_NAME} PRIVATE /W4)
+    target_compile_options(CppProjectTemplate PRIVATE /W4)
 else()
-    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(CppProjectTemplate PRIVATE -Wall -Wextra -Wpedantic)
 endif()
-
-# Enable position independent code
-set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)

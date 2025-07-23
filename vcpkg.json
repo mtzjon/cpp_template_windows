@@ -1,61 +1,29 @@
 {
   "$schema": "https://raw.githubusercontent.com/Microsoft/vcpkg/master/scripts/vcpkg.schema.json",
   "name": "cpp-project-template",
-  "version-string": "1.0.0",
-  "description": "A modern C++ project template with best practices",
+  "version": "1.0.0",
+  "description": "A modern C++ project template with Eigen-based robotics and geometry utilities",
   "homepage": "https://github.com/yourorg/cpp-project-template",
   "license": "MIT",
   "dependencies": [
     {
-      "name": "vcpkg-cmake",
-      "host": true
+      "name": "eigen3",
+      "version>=": "3.4.0"
     },
     {
-      "name": "vcpkg-cmake-config",
-      "host": true
+      "name": "cli11",
+      "version>=": "2.3.2"
+    },
+    {
+      "name": "catch2",
+      "version>=": "3.4.0",
+      "features": ["top-level-targets"]
+    },
+    {
+      "name": "gtest",
+      "version>=": "1.14.0"
     }
   ],
-  "features": {
-    "testing": {
-      "description": "Enable testing dependencies",
-      "dependencies": [
-        "catch2",
-        "gtest"
-      ]
-    },
-    "networking": {
-      "description": "Enable networking libraries",
-      "dependencies": [
-        "cpprestsdk",
-        "curl"
-      ]
-    },
-    "json": {
-      "description": "Enable JSON processing",
-      "dependencies": [
-        "nlohmann-json",
-        "rapidjson"
-      ]
-    },
-    "crypto": {
-      "description": "Enable cryptographic libraries",
-      "dependencies": [
-        "openssl"
-      ]
-    },
-    "gui": {
-      "description": "Enable GUI libraries",
-      "dependencies": [
-        "qt5-base",
-        "imgui"
-      ]
-    },
-    "database": {
-      "description": "Enable database connectivity",
-      "dependencies": [
-        "sqlite3",
-        "postgresql"
-      ]
-    }
-  }
+  "features": {},
+  "builtin-baseline": "a7b6122f6b6504d16d96117336a0562693579933"
 }
