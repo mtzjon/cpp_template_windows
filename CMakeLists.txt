@@ -71,8 +71,21 @@ else()
     message(STATUS "Doxygen not found, not building docs")
 endif()
 
-# Main library
-add_subdirectory(src)
+# Libraries
+add_subdirectory(libs/core)
+add_subdirectory(libs/geometry)
+add_subdirectory(libs/robotics)
+
+# Compatibility: Create an umbrella target that links all libraries
+add_library(CppProjectTemplate INTERFACE)
+add_library(CppProjectTemplate::CppProjectTemplate ALIAS CppProjectTemplate)
+
+target_link_libraries(CppProjectTemplate
+    INTERFACE
+        CppProjectTemplate::Core
+        CppProjectTemplate::Geometry
+        CppProjectTemplate::Robotics
+)
 
 # Applications
 add_subdirectory(apps)
@@ -96,8 +109,8 @@ endif()
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-# Install the library
-install(TARGETS CppProjectTemplate
+# Install the libraries
+install(TARGETS CppProjectTemplate_Core CppProjectTemplate_Geometry CppProjectTemplate_Robotics CppProjectTemplate
     EXPORT CppProjectTemplateTargets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

@@ -1,18 +1,17 @@
 #pragma once
 
 /**
- * @file geometry.hpp
- * @brief Main header for 3D geometry primitives and operations
+ * @file core.hpp
+ * @brief Main header for core mathematical and utility functions
  */
 
-#include <string>
-#include "cpp_project_template/geometry/pose3d.hpp"
+#include "cpp_project_template/core/utilities.hpp"
 
 namespace cpp_project_template {
-namespace geometry {
+namespace core {
 
 /**
- * @brief Version information for the geometry library
+ * @brief Version information for the core library
  */
 struct Version {
     static constexpr int major = 1;
@@ -24,5 +23,5 @@ struct Version {
     }
 };
 
-} // namespace geometry
+} // namespace core
 } // namespace cpp_project_template

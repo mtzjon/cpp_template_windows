@@ -1,18 +1,20 @@
 #pragma once
 
 /**
- * @file geometry.hpp
- * @brief Main header for 3D geometry primitives and operations
+ * @file robotics.hpp
+ * @brief Main header for robotics utilities including twists, wrenches, and transforms
  */
 
 #include <string>
-#include "cpp_project_template/geometry/pose3d.hpp"
+#include "cpp_project_template/robotics/twist.hpp"
+#include "cpp_project_template/robotics/wrench.hpp"
+#include "cpp_project_template/robotics/transforms.hpp"
 
 namespace cpp_project_template {
-namespace geometry {
+namespace robotics {
 
 /**
- * @brief Version information for the geometry library
+ * @brief Version information for the robotics library
  */
 struct Version {
     static constexpr int major = 1;
@@ -24,5 +26,5 @@ struct Version {
     }
 };
 
-} // namespace geometry
+} // namespace robotics
 } // namespace cpp_project_template

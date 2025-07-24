@@ -8,6 +8,12 @@ set_target_properties(CppProjectTemplate_app PROPERTIES
     CXX_STANDARD_REQUIRED ON
 )
 
+# Include directories for headers
+target_include_directories(CppProjectTemplate_app
+    PRIVATE
+        ${CMAKE_SOURCE_DIR}/include
+)
+
 # Link libraries
 target_link_libraries(CppProjectTemplate_app
     PRIVATE
