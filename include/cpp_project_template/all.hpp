@@ -11,6 +11,8 @@
 #include "cpp_project_template/core.hpp"
 #include "cpp_project_template/geometry.hpp"
 #include "cpp_project_template/robotics.hpp"
+#include "cpp_project_template/config.hpp"
+#include "cpp_project_template/integration.hpp"
 
 namespace cpp_project_template {
 

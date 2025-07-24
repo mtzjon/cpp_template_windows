@@ -76,6 +76,9 @@ add_subdirectory(libs/core)
 add_subdirectory(libs/geometry)
 add_subdirectory(libs/robotics)
 
+# Root src integration library
+add_subdirectory(src)
+
 # Compatibility: Create an umbrella target that links all libraries
 add_library(CppProjectTemplate INTERFACE)
 add_library(CppProjectTemplate::CppProjectTemplate ALIAS CppProjectTemplate)
@@ -85,6 +88,7 @@ target_link_libraries(CppProjectTemplate
         CppProjectTemplate::Core
         CppProjectTemplate::Geometry
         CppProjectTemplate::Robotics
+        CppProjectTemplate::Integration
 )
 
 # Applications
@@ -110,7 +114,7 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 # Install the libraries
-install(TARGETS CppProjectTemplate_Core CppProjectTemplate_Geometry CppProjectTemplate_Robotics CppProjectTemplate
+install(TARGETS CppProjectTemplate_Core CppProjectTemplate_Geometry CppProjectTemplate_Robotics CppProjectTemplate_Integration CppProjectTemplate
     EXPORT CppProjectTemplateTargets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

@@ -25,6 +25,62 @@ The project is structured into three main libraries with clear dependencies:
 └─────────────────┘
 ```
 
+## Root `src/` and `include/` Directories
+
+The root `src/` and `include/` directories serve important purposes in a multi-library project:
+
+### **Root `include/` Directory**
+Contains **project-wide headers** that:
+- **Configuration**: Project-wide compile-time settings (`config.hpp`)
+- **Integration APIs**: High-level APIs combining multiple libraries (`integration.hpp`)
+- **Umbrella headers**: Convenience headers that include everything (`all.hpp`)
+- **Compatibility**: Legacy or compatibility headers for older APIs
+
+### **Root `src/` Directory** 
+Contains **integration library implementation** that:
+- **Integration Library**: High-level functionality combining the separated libraries
+- **Project coordination**: Code that doesn't belong to any specific library
+- **Cross-library utilities**: Functions that use multiple libraries together
+
+### 4. Integration Library (`CppProjectTemplate::Integration`)
+
+**Purpose**: Provides high-level APIs that combine functionality from Core, Geometry, and Robotics libraries.
+
+**Location**: `src/` (root directory)
+
+**Headers**:
+- `cpp_project_template/integration.hpp` - Main integration header
+- `cpp_project_template/config.hpp` - Project configuration
+
+**Key Features**:
+- **MotionPlanner**: Trajectory planning combining geometry and robotics
+- **ForceAnalyzer**: Force analysis and equilibrium checking
+- **geometric_utils**: Advanced path generation (circular, helical)
+- **kinematics**: Basic robot kinematics utilities
+
+**Dependencies**: 
+- Core Library
+- Geometry Library  
+- Robotics Library
+- Eigen3
+
+**Example Usage**:
+```cpp
+#include "cpp_project_template/integration.hpp"
+using namespace cpp_project_template::integration;
+
+// High-level trajectory planning
+auto trajectory = MotionPlanner::planLinearTrajectory(start_pose, end_pose);
+auto pose_at_time = trajectory.getPoseAtTime(1.5);
+
+// Advanced path generation
+auto circular_path = geometric_utils::generateCircularPath(center, radius);
+auto helical_path = geometric_utils::generateHelicalPath(center, radius, pitch);
+
+// Force analysis
+bool equilibrium = ForceAnalyzer::isInEquilibrium(force_points);
+```
+
 ## Library Details
 
 ### 1. Core Library (`CppProjectTemplate::Core`)
@@ -137,9 +193,10 @@ Each library has its own `CMakeLists.txt` with proper dependency management:
 
 ```cmake
 # Individual library targets
-CppProjectTemplate::Core      # libCppProjectTemplate_Core.a
-CppProjectTemplate::Geometry  # libCppProjectTemplate_Geometry.a  
-CppProjectTemplate::Robotics  # libCppProjectTemplate_Robotics.a
+CppProjectTemplate::Core         # libCppProjectTemplate_Core.a
+CppProjectTemplate::Geometry     # libCppProjectTemplate_Geometry.a  
+CppProjectTemplate::Robotics     # libCppProjectTemplate_Robotics.a
+CppProjectTemplate::Integration  # libCppProjectTemplate_Integration.a
 
 # Umbrella target (links all libraries)
 CppProjectTemplate::CppProjectTemplate
@@ -149,6 +206,7 @@ CppProjectTemplate::CppProjectTemplate
 
 ```
 CMakeLists.txt                 # Main project configuration
+src/CMakeLists.txt            # Integration library build rules  
 libs/
 ├── core/CMakeLists.txt       # Core library build rules
 ├── geometry/CMakeLists.txt   # Geometry library build rules
@@ -166,8 +224,11 @@ target_link_libraries(my_target PRIVATE CppProjectTemplate::Core)
 # Use geometry primitives (automatically includes Core)
 target_link_libraries(my_target PRIVATE CppProjectTemplate::Geometry)
 
-# Use full robotics functionality (includes all libraries)
+# Use robotics functionality (includes Core + Geometry)
 target_link_libraries(my_target PRIVATE CppProjectTemplate::Robotics)
+
+# Use high-level integration APIs (includes all base libraries)
+target_link_libraries(my_target PRIVATE CppProjectTemplate::Integration)
 
 # Use everything with umbrella target
 target_link_libraries(my_target PRIVATE CppProjectTemplate::CppProjectTemplate)
@@ -228,6 +289,14 @@ using namespace cpp_project_template::geometry;
 // Robotics only (includes Core + Geometry)
 #include "cpp_project_template/robotics.hpp"
 using namespace cpp_project_template::robotics;
+
+// Integration APIs (includes all base libraries)
+#include "cpp_project_template/integration.hpp"
+using namespace cpp_project_template::integration;
+
+// Project configuration
+#include "cpp_project_template/config.hpp"
+using namespace cpp_project_template::config;
 ```
 
 ## Demo Application
@@ -253,6 +322,17 @@ The included demo application showcases all libraries:
 ## File Structure
 
 ```
+# Root directories for project-wide functionality
+include/cpp_project_template/
+├── config.hpp           # Project configuration
+├── integration.hpp      # High-level integration APIs  
+└── all.hpp             # Umbrella header including everything
+
+src/
+├── CMakeLists.txt      # Integration library build rules
+└── integration.cpp     # Integration library implementation
+
+# Separated libraries
 libs/
 ├── core/
 │   ├── CMakeLists.txt
